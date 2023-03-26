@@ -1,5 +1,5 @@
-#0x11. C - printf
-##Description
+# 0x11. C - printf
+## Description
 
 **This is a team project assigned to create our own PRINTF function in c, that writes out a cstring to stdout (standard output). The provided cstring may contain format specifiers( beginning with % in the cstring).**
 
@@ -46,9 +46,9 @@
 	* You don’t have to handle the length modifiers
 8. Handle the following flag characters for non-custom conversion specifiers:
 
-	* +
+	* \+
 	* space
-	* #
+	* \#
 
 9. Handle the following length modifiers for non-custom conversion specifiers:
 
