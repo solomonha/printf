@@ -5,71 +5,116 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+
+#define UNUSED(x) (void)(x)
+#define BUFF_SIZE 1024
+
+/* FLAGS */
+#define F_MINUS 1
+#define F_PLUS 2
+#define F_ZERO 4
+#define F_HASH 8
+#define F_SPACE 16
+
+/* SIZES */
+#define S_LONG 2
+#define S_SHORT 1
 
 /**
- * struct opr - defines a structure for operations
- * @spec_char: specifying character
+ * struct fmt - Struct op
  *
- * @f: function pointer that matches specifier
- *
+ * @fmt: The format.
+ * @fn: The function associated.
  */
-
-typedef struct opr
+struct fmt
 {
-	char spec_char;
-	int (*f)(va_list ap);
-} opr;
+	char fmt;
+	int (*fn)(va_list, char[], int, int, int, int);
+};
 
 
-/* Prototype function for _putchar */
-int _putchar(char c);
+/**
+ * typedef struct fmt fmt_t - Struct op
+ *
+ * @fmt: The format.
+ * @fm_t: The function associated.
+ */
+typedef struct fmt fmt_t;
 
-/* Prototype function to determine string length */
-int string_length(char *s);
-
-/*Prototype function to determine string comparison */
-int string_compare(const char *s1, char *s2);
-
-/* Prototype function of main printf to print string and call formatting */
 int _printf(const char *format, ...);
+int handle_print(const char *fmt, int *i,
+va_list list, char buffer[], int flags, int width, int precision, int size);
 
-/* Prototype function to format printing character */
-int print_char(va_list ap);
+/****************** FUNCTIONS ******************/
 
-/* Prototype function to format printing string */
-int print_string(va_list ap);
+/* Funtions to print chars and strings */
+int print_char(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_string(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_percent(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
 
-/* Prototype function to format printing integer */
-int print_int(va_list ap);
+/* Functions to print numbers */
+int print_int(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_binary(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_unsigned(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_octal(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_hexadecimal(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_hexa_upper(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
 
-/* Prototype function to format printing string in rot13 */
-int print_rot13(va_list ap);
+int print_hexa(va_list types, char map_to[],
+char buffer[], int flags, char flag_ch, int width, int precision, int size);
 
-/* Prototype function to format printing string in reverse */
-int print_reverse(va_list ap);
+/* Function to print non printable characters */
+int print_non_printable(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
 
-/* Prototype function to format printing percent character */
-int print_perc(void);
+/* Funcion to print memory address */
+int print_pointer(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
 
-/*Prototype function to format printing binary number */
-int print_binary(va_list ap);
+/* Funciotns to handle other specifiers */
+int get_flags(const char *format, int *i);
+int get_width(const char *format, int *i, va_list list);
+int get_precision(const char *format, int *i, va_list list);
+int get_size(const char *format, int *i);
 
-/*Prototype function to format printing octal number */
-int print_octal(va_list ap);
+/*Function to print string in reverse*/
+int print_reverse(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
 
-/*Prototype function to format printing hexadecimal number (lowercase)*/
-int print_hexadecimalx(va_list ap);
+/*Function to print a string in rot 13*/
+int print_rot13string(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
 
-/*Prototype function to format printing hexadecimal number (uppercase)*/
-int print_hexidecimalX(va_list ap);
+/* width handler */
+int handle_write_char(char c, char buffer[],
+	int flags, int width, int precision, int size);
+int write_number(int is_positive, int ind, char buffer[],
+	int flags, int width, int precision, int size);
+int write_num(int ind, char bff[], int flags, int width, int precision,
+	int length, char padd, char extra_c);
+int write_pointer(char buffer[], int ind, int length,
+	int width, int flags, char padd, char extra_c, int padd_start);
 
-/*Prototype function to format printing unsigned int */
-int print_unsigned(va_list ap);
+int write_unsgnd(int is_negative, int ind,
+char buffer[],
+	int flags, int width, int precision, int size);
 
-/*Prototype function to format printing string with only printable char*/
-int print_S(va_list ap);
+/****************** UTILS ******************/
+int is_printable(char);
+int append_hexa_code(char, char[], int);
+int is_digit(char);
 
-/*Prototype function to print a string as hexadecimal value */
-void hexadecimal(unsigned int s);
+long int convert_size_number(long int num, int size);
+long int convert_size_unsgnd(unsigned long int num, int size);
 
-#endif
+#endif /* MAIN_H */
